@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: noc-agent-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: VOYAGE_API_KEY  
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+
+  - type: static
+    name: noc-agent-frontend
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
