@@ -34,7 +34,6 @@ export default function App() {
   const [activeScenario, setActiveScenario] = useState(null);
   const [error, setError] = useState('');
 
-  // Load topology once
   useEffect(() => {
     fetch(`${API}/topology`)
       .then(r => r.json())
@@ -61,6 +60,7 @@ export default function App() {
       setPrimaryIncident(data.primary_incident || null);
       setTriageBrief(data.triage_brief || '');
     } catch (e) {
+      console.error('Simulation error:', e);
       setError('Simulation failed. Is the backend running?');
     } finally {
       setLoading(false);
@@ -229,7 +229,7 @@ export default function App() {
 
         {/* Center: React Flow diagram */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ flex: 1, minHeight: 0 }}>
+          <div style={{ flex: 1, minHeight: 0, background: '#f0f2f5' }}>
             {topology
               ? <FlowContainer topology={topology} incidents={incidents} />
               : (
