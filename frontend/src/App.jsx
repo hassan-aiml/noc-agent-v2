@@ -5,40 +5,25 @@ import TriageTerminal from './TriageTerminal';
 const API = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 const SCENARIOS = [
-  {
-    id: 'single_ru',
-    label: '① Single RU Failure',
-    description: 'RU-01 — VSWR High',
-    color: '#ff9500',
-  },
-  {
-    id: 'hub_failure',
-    label: '② Food Court Hub Failure',
-    description: 'EH-01: All 5 RUs Offline',
-    color: '#ff3a3a',
-  },
-  {
-    id: 'poi_signal_loss',
-    label: '③ Meridian n41 Signal Loss',
-    description: 'Sector-wide DL Power Low',
-    color: '#4d9eff',
-  },
+  { id: 'single_ru',       label: '① Single RU Failure',       description: 'RU-01 — VSWR High',        color: '#ff832b' },
+  { id: 'hub_failure',     label: '② Food Court Hub Failure',   description: 'EH-01: All 5 RUs Offline', color: '#fa4d56' },
+  { id: 'poi_signal_loss', label: '③ Meridian n41 Signal Loss', description: 'Sector-wide DL Power Low',  color: '#33b1ff' },
 ];
 
 export default function App() {
-  const [topology, setTopology] = useState(null);
-  const [incidents, setIncidents] = useState([]);
+  const [topology, setTopology]               = useState(null);
+  const [incidents, setIncidents]             = useState([]);
   const [primaryIncident, setPrimaryIncident] = useState(null);
-  const [triageBrief, setTriageBrief] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [activeScenario, setActiveScenario] = useState(null);
-  const [error, setError] = useState('');
+  const [triageBrief, setTriageBrief]         = useState('');
+  const [loading, setLoading]                 = useState(false);
+  const [activeScenario, setActiveScenario]   = useState(null);
+  const [error, setError]                     = useState('');
 
   useEffect(() => {
     fetch(`${API}/topology`)
       .then(r => r.json())
       .then(setTopology)
-      .catch(e => setError('Backend not reachable — start FastAPI on port 8000'));
+      .catch(() => setError('Backend not reachable — start FastAPI on port 8000'));
   }, []);
 
   const runScenario = useCallback(async (scenarioId) => {
@@ -48,7 +33,6 @@ export default function App() {
     setIncidents([]);
     setPrimaryIncident(null);
     setError('');
-
     try {
       const res = await fetch(`${API}/simulate`, {
         method: 'POST',
@@ -80,98 +64,98 @@ export default function App() {
       display: 'flex',
       flexDirection: 'column',
       height: '100vh',
-      background: '#060b14',
-      color: '#b0c4de',
+      background: '#161616',
+      color: '#f4f4f4',
       fontFamily: "'JetBrains Mono', monospace",
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #060b14; }
+        body { background: #161616; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a1020; }
-        ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #1c1c1c; }
+        ::-webkit-scrollbar-thumb { background: #33b1ff44; border-radius: 3px; }
         .scenario-btn {
-          background: #0a1020;
-          border: 1px solid #1e3050;
-          color: #b0c4de;
-          padding: 10px 14px;
-          border-radius: 6px;
+          background: #262626;
+          border: 0.5px solid #393939;
+          color: #f4f4f4;
+          padding: 12px 14px;
+          border-radius: 0px;
           cursor: pointer;
           text-align: left;
           transition: all 0.2s;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
+          font-size: 12px;
           width: 100%;
-          margin-bottom: 8px;
+          margin-bottom: 1px;
         }
-        .scenario-btn:hover { border-color: #4d9eff; background: #0d1a2b; }
-        .scenario-btn.active { border-color: #ff3a3a; background: #0d0a1a; }
+        .scenario-btn:hover { border-color: #33b1ff; background: #1a2a35; }
+        .scenario-btn.active { border-left: 2px solid #fa4d56; background: #2a1515; }
         .reset-btn {
           background: transparent;
-          border: 1px solid #1e3050;
-          color: #4d9eff;
-          padding: 8px 12px;
-          border-radius: 4px;
+          border: 0.5px solid #393939;
+          color: #33b1ff;
+          padding: 9px 12px;
+          border-radius: 0px;
           cursor: pointer;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
+          font-size: 12px;
           width: 100%;
           transition: all 0.2s;
         }
-        .reset-btn:hover { border-color: #4d9eff; background: #0d1a2b; }
+        .reset-btn:hover { border-color: #33b1ff; background: #1a2a35; }
       `}</style>
 
-      {/* ── Top Bar ── */}
+      {/* Top Bar */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        padding: '10px 20px',
-        background: '#060b14',
-        borderBottom: '1px solid #1e3050',
+        padding: '12px 24px',
+        background: '#1c1c1c',
+        borderBottom: '1px solid #393939',
         gap: 16,
+        flexShrink: 0,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 20 }}>🛰️</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 22 }}>🛰️</span>
           <div>
-            <div style={{ color: '#4d9eff', fontWeight: 700, fontSize: 13, letterSpacing: 3 }}>NOC TRIAGE AGENT</div>
-            <div style={{ color: '#3a5a7a', fontSize: 10, letterSpacing: 2 }}>DIGITAL TWIN · PHASE 2</div>
+            <div style={{ color: '#33b1ff', fontWeight: 700, fontSize: 15, letterSpacing: 3 }}>NOC TRIAGE AGENT</div>
+            <div style={{ color: '#6f6f6f', fontSize: 11, letterSpacing: 2 }}>DIGITAL TWIN · PHASE 2</div>
           </div>
         </div>
         <div style={{ flex: 1 }} />
-        <div style={{ display: 'flex', gap: 20, fontSize: 10, color: '#3a5a7a' }}>
-          <span>SITE: <span style={{ color: '#b0c4de' }}>NORTHPARK MALL</span></span>
-          <span>NODES: <span style={{ color: '#00ffa3' }}>{topology ? Object.keys(topology.nodes || {}).length : '—'}</span></span>
+        <div style={{ display: 'flex', gap: 24, fontSize: 11, color: '#6f6f6f' }}>
+          <span>SITE: <span style={{ color: '#f4f4f4' }}>NORTHPARK MALL</span></span>
+          <span>NODES: <span style={{ color: '#42be65' }}>{topology ? Object.keys(topology.nodes || {}).length : '—'}</span></span>
           {activeScenario && (
-            <span>
-              SCENARIO: <span style={{ color: '#ff9500' }}>
-                {SCENARIOS.find(s => s.id === activeScenario)?.id.toUpperCase()}
-              </span>
-            </span>
+            <span>SCENARIO: <span style={{ color: '#ff832b' }}>
+              {SCENARIOS.find(s => s.id === activeScenario)?.id.toUpperCase()}
+            </span></span>
           )}
         </div>
         {error && (
-          <div style={{ background: '#1a0505', border: '1px solid #ff3a3a', color: '#ff7070', padding: '4px 10px', borderRadius: 4, fontSize: 10 }}>
+          <div style={{ background: '#2a0e0e', border: '0.5px solid #fa4d56', color: '#ff8389', padding: '5px 12px', borderRadius: 0, fontSize: 11 }}>
             ⚠ {error}
           </div>
         )}
       </div>
 
-      {/* ── Main Layout ── */}
+      {/* Main Layout */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
         {/* Sidebar */}
         <div style={{
-          width: 220,
-          background: '#08101e',
-          borderRight: '1px solid #1e3050',
-          padding: 16,
+          width: 230,
+          background: '#1c1c1c',
+          borderRight: '1px solid #393939',
+          padding: 18,
           display: 'flex',
           flexDirection: 'column',
           gap: 4,
           overflowY: 'auto',
+          flexShrink: 0,
         }}>
-          <div style={{ color: '#3a5a7a', fontSize: 10, letterSpacing: 2, marginBottom: 10 }}>SIMULATE FAULT</div>
+          <div style={{ color: '#6f6f6f', fontSize: 11, letterSpacing: 2, marginBottom: 12 }}>SIMULATE FAULT</div>
 
           {SCENARIOS.map(sc => (
             <button
@@ -179,75 +163,75 @@ export default function App() {
               className={`scenario-btn ${activeScenario === sc.id ? 'active' : ''}`}
               onClick={() => runScenario(sc.id)}
             >
-              <div style={{ color: sc.color, fontWeight: 700, marginBottom: 3 }}>{sc.label}</div>
-              <div style={{ color: '#3a5a7a', fontSize: 10 }}>{sc.description}</div>
+              <div style={{ color: sc.color, fontWeight: 700, marginBottom: 4 }}>{sc.label}</div>
+              <div style={{ color: '#6f6f6f', fontSize: 10 }}>{sc.description}</div>
             </button>
           ))}
 
           <div style={{ flex: 1 }} />
-
           <button className="reset-btn" onClick={resetAll}>↺ Reset</button>
 
-          {/* Legend */}
-          <div style={{ marginTop: 16, borderTop: '1px solid #1e3050', paddingTop: 12 }}>
-            <div style={{ color: '#3a5a7a', fontSize: 9, letterSpacing: 2, marginBottom: 8 }}>LEGEND</div>
+          {/* Legend — 3 items only */}
+          <div style={{ marginTop: 18, borderTop: '1px solid #393939', paddingTop: 14 }}>
+            <div style={{ color: '#6f6f6f', fontSize: 10, letterSpacing: 2, marginBottom: 10 }}>LEGEND</div>
             {[
-              { color: '#00ffa3', label: 'Healthy' },
-              { color: '#ff3a3a', label: 'Root Fault' },
-              { color: '#ff9500', label: 'Impacted' },
-              { color: '#4d9eff', label: 'POI/Source' },
+              { color: '#42be65', label: 'Healthy' },
+              { color: '#fa4d56', label: 'Root Fault' },
+              { color: '#ff832b', label: 'Impacted' },
+              { color: '#33b1ff', label: 'POI/Source' },
             ].map(item => (
-              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, fontSize: 10 }}>
-                <div style={{ width: 10, height: 10, borderRadius: 2, background: item.color + '33', border: `1px solid ${item.color}` }} />
-                <span style={{ color: '#6a8aaa' }}>{item.label}</span>
+              <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 6, fontSize: 11 }}>
+                <div style={{ width: 10, height: 10, borderRadius: 0, background: item.color + '33', border: `1px solid ${item.color}` }} />
+                <span style={{ color: '#a8a8a8' }}>{item.label}</span>
               </div>
             ))}
           </div>
 
           {/* Incident list */}
           {incidents.length > 0 && (
-            <div style={{ marginTop: 12, borderTop: '1px solid #1e3050', paddingTop: 12 }}>
-              <div style={{ color: '#3a5a7a', fontSize: 9, letterSpacing: 2, marginBottom: 8 }}>INCIDENTS ({incidents.length})</div>
+            <div style={{ marginTop: 14, borderTop: '1px solid #393939', paddingTop: 14 }}>
+              <div style={{ color: '#6f6f6f', fontSize: 10, letterSpacing: 2, marginBottom: 10 }}>INCIDENTS ({incidents.length})</div>
               {incidents.map(inc => (
                 <div key={inc.incident_id} style={{
-                  background: '#0a1020',
-                  border: `1px solid ${inc.severity === 'P1' ? '#ff3a3a44' : inc.severity === 'P2' ? '#ff6a0044' : '#1e3050'}`,
-                  borderRadius: 4,
-                  padding: '6px 8px',
-                  marginBottom: 6,
-                  fontSize: 10,
+                  background: '#262626',
+                  borderLeft: `2px solid ${inc.severity === 'P1' ? '#fa4d56' : inc.severity === 'P2' ? '#ff832b' : '#42be65'}`,
+                  borderTop: '0.5px solid #393939',
+                  borderRight: '0.5px solid #393939',
+                  borderBottom: '0.5px solid #393939',
+                  padding: '7px 10px',
+                  marginBottom: 4,
+                  fontSize: 11,
                 }}>
-                  <div style={{ color: inc.severity === 'P1' ? '#ff7070' : inc.severity === 'P2' ? '#ff9500' : '#00ffa3', fontWeight: 700, fontSize: 9 }}>
+                  <div style={{ color: inc.severity === 'P1' ? '#fa4d56' : inc.severity === 'P2' ? '#ff832b' : '#42be65', fontWeight: 700, fontSize: 10 }}>
                     {'■'.repeat({'P1':5,'P2':4,'P3':3,'P4':2,'P5':1}[inc.severity]||0)}{'□'.repeat(5-({'P1':5,'P2':4,'P3':3,'P4':2,'P5':1}[inc.severity]||0))} {inc.severity} · {inc.scope_label}
                   </div>
-                  <div style={{ color: '#8aafcc', marginTop: 2 }}>{inc.root_cause_node}</div>
+                  <div style={{ color: '#a8a8a8', marginTop: 3 }}>{inc.root_cause_node}</div>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* Center: React Flow diagram */}
+        {/* Center column — 55/45 split */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ flex: 1, minHeight: 0, background: '#f0f2f5' }}>
+
+          {/* Topology — 55% */}
+          <div style={{ flex: '0 0 55%', minHeight: 0, overflow: 'hidden' }}>
             {topology
               ? <FlowContainer topology={topology} incidents={incidents} />
               : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#3a5a7a' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#6f6f6f' }}>
                   {error ? error : 'Loading topology...'}
                 </div>
               )
             }
           </div>
 
-          {/* Bottom terminal */}
-          <div style={{ height: 340, borderTop: "1px solid #1e3050" }}>
-            <TriageTerminal
-              brief={triageBrief}
-              loading={loading}
-              incident={primaryIncident}
-            />
+          {/* Terminal — 45%, scrollable */}
+          <div style={{ flex: '0 0 45%', borderTop: '1px solid #393939', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <TriageTerminal brief={triageBrief} loading={loading} incident={primaryIncident} />
           </div>
+
         </div>
       </div>
     </div>
